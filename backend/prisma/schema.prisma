@@ -1,0 +1,40 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Item {
+  id           String   @id @default(cuid())
+  serialNumber String   @unique @map("serial_number")
+  itemName     String?  @map("item_name")
+  category     String?
+  description  String?
+  currentPrice Decimal  @map("current_price")
+  imageUrl     String?  @map("image_url")
+  createdAt    DateTime @default(now()) @map("created_date")
+  updatedAt    DateTime @updatedAt @map("last_updated")
+  
+  priceHistory PriceHistory[]
+
+  @@map("items")
+}
+
+model PriceHistory {
+  id           String   @id @default(cuid())
+  itemId       String   @map("item_id")
+  serialNumber String   @map("serial_number")
+  oldPrice     Decimal  @map("old_price")
+  newPrice     Decimal  @map("new_price")
+  notes        String?
+  createdAt    DateTime @default(now()) @map("price_change_date")
+  
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@map("price_history")
+}
