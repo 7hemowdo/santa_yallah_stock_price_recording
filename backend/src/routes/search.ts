@@ -8,22 +8,20 @@ const router = Router();
 // Validation schemas
 const searchSchema = z.object({
   q: z.string().min(1, 'Query is required').max(50),
-  category: z.string().max(50).optional(),
   page: z.string().optional().transform(val => val ? parseInt(val) : 1),
   limit: z.string().optional().transform(val => val ? Math.min(parseInt(val) || 50, 100) : 50),
 });
 
 /**
- * GET /api/search?q=query&category=category&page=1&limit=50
+ * GET /api/search?q=query&page=1&limit=50
  * Search items by serial number or name
  */
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const { q: query, category, page, limit } = searchSchema.parse(req.query);
+    const { q: query, page, limit } = searchSchema.parse(req.query);
     
     const result = await itemService.search({
       query,
-      category,
       page,
       limit,
     });
@@ -127,28 +125,6 @@ router.get('/suggestions', async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       error: 'Failed to fetch suggestions',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
-  }
-});
-
-/**
- * GET /api/search/categories
- * Get all categories with item counts
- */
-router.get('/categories', async (req: Request, res: Response) => {
-  try {
-    const categoryCounts = await itemService.getCategoryCounts();
-    
-    return res.json({
-      success: true,
-      data: categoryCounts,
-    });
-  } catch (error) {
-    console.error('Error fetching category counts:', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Failed to fetch category counts',
       message: error instanceof Error ? error.message : 'Unknown error',
     });
   }

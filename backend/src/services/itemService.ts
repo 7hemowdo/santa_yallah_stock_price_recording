@@ -6,7 +6,6 @@ const prisma = new PrismaClient();
 export interface CreateItemData {
   serialNumber: string;
   itemName?: string | null;
-  category?: string | null;
   description?: string | null;
   currentPrice: number;
   imageUrl?: string | null;
@@ -14,14 +13,12 @@ export interface CreateItemData {
 
 export interface UpdateItemData {
   itemName?: string | null;
-  category?: string | null;
   description?: string | null;
   imageUrl?: string | null;
 }
 
 export interface SearchOptions {
   query?: string;
-  category?: string;
   page?: number;
   limit?: number;
 }
@@ -80,7 +77,7 @@ class ItemService {
   /**
    * Search items by serial number (partial match)
    */
-  async search({ query, category, page = 1, limit = 50 }: SearchOptions): Promise<SearchResult> {
+  async search({ query, page = 1, limit = 50 }: SearchOptions): Promise<SearchResult> {
     const skip = (page - 1) * limit;
     
     const where: Prisma.ItemWhereInput = {};
@@ -91,10 +88,6 @@ class ItemService {
         { itemName: { contains: query } },
       ];
     }
-    
-    if (category) {
-      where.category = { equals: category };
-    }
 
     const [items, total] = await Promise.all([
       prisma.item.findMany({
@@ -115,32 +108,6 @@ class ItemService {
     };
   }
 
-  /**
-   * Get items by category
-   */
-  async getByCategory(category: string, page = 1, limit = 50): Promise<SearchResult> {
-    const skip = (page - 1) * limit;
-    
-    const where = { category: { equals: category } };
-
-    const [items, total] = await Promise.all([
-      prisma.item.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { updatedAt: 'desc' },
-      }),
-      prisma.item.count({ where }),
-    ]);
-
-    return {
-      items,
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
-    };
-  }
 
   /**
    * Create new item
@@ -156,7 +123,6 @@ class ItemService {
       data: {
         serialNumber: data.serialNumber,
         itemName: data.itemName,
-        category: data.category,
         description: data.description,
         currentPrice: data.currentPrice,
         imageUrl: data.imageUrl,
@@ -177,7 +143,6 @@ class ItemService {
       where: { serialNumber },
       data: {
         itemName: data.itemName,
-        category: data.category,
         description: data.description,
         imageUrl: data.imageUrl,
         updatedAt: new Date(),
@@ -228,39 +193,6 @@ class ItemService {
     });
   }
 
-  /**
-   * Get all categories
-   */
-  async getCategories(): Promise<string[]> {
-    const result = await prisma.item.findMany({
-      distinct: ['category'],
-      select: { category: true },
-      where: { category: { not: null } },
-      orderBy: { category: 'asc' },
-    });
-
-    return result
-      .map(item => item.category)
-      .filter((category): category is string => category !== null);
-  }
-
-  /**
-   * Get items count by category
-   */
-  async getCategoryCounts(): Promise<Array<{ category: string; count: number }>> {
-    const result = await prisma.item.groupBy({
-      by: ['category'],
-      _count: { category: true },
-      where: { category: { not: null } },
-      orderBy: { category: 'asc' },
-    });
-
-    return result
-      .map(item => ({
-        category: item.category || 'Uncategorized',
-        count: item._count.category,
-      }));
-  }
 }
 
 export const itemService = new ItemService();

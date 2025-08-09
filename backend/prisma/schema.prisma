@@ -13,7 +13,6 @@ model Item {
   id           String   @id @default(cuid())
   serialNumber String   @unique @map("serial_number")
   itemName     String?  @map("item_name")
-  category     String?
   description  String?
   currentPrice Decimal  @map("current_price")
   imageUrl     String?  @map("image_url")

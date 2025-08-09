@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import { Sidebar, SidebarLayout } from '@/components/ui/sidebar'
 import { MobileNav, MobileNavSpacer } from '@/components/mobile/MobileNav'
 import { Toaster } from '@/components/ui/toaster'
+import { ThemeProvider } from '@/lib/contexts/theme-context'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -35,23 +36,28 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
       </head>
       <body className={inter.className}>
-        <div className="min-h-screen bg-background">
-          {/* Desktop Sidebar */}
-          <Sidebar />
-          
-          {/* Main Content */}
-          <SidebarLayout>
-            <main className="min-h-screen">
-              {children}
-              {/* Mobile Navigation Spacer */}
-              <MobileNavSpacer />
-            </main>
-          </SidebarLayout>
+        <ThemeProvider
+          defaultTheme="system"
+          storageKey="price-tracker-theme"
+        >
+          <div className="min-h-screen bg-background transition-colors">
+            {/* Desktop Sidebar */}
+            <Sidebar />
+            
+            {/* Main Content */}
+            <SidebarLayout>
+              <main className="min-h-screen">
+                {children}
+                {/* Mobile Navigation Spacer */}
+                <MobileNavSpacer />
+              </main>
+            </SidebarLayout>
 
-          {/* Mobile Bottom Navigation */}
-          <MobileNav />
-        </div>
-        <Toaster />
+            {/* Mobile Bottom Navigation */}
+            <MobileNav />
+          </div>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )

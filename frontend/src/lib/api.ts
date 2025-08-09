@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002'
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -28,6 +28,10 @@ api.interceptors.request.use(
 // Response interceptor
 api.interceptors.response.use(
   (response) => {
+    // Extract data from the backend response format { success: true, data: ... }
+    if (response.data && response.data.success && response.data.data !== undefined) {
+      response.data = response.data.data
+    }
     return response
   },
   (error) => {
@@ -45,7 +49,6 @@ export interface Item {
   id: string
   serialNumber: string
   itemName?: string
-  category?: string
   description?: string
   currentPrice: number
   imageUrl?: string
@@ -66,7 +69,6 @@ export interface PriceHistory {
 export interface CreateItemRequest {
   serialNumber: string
   itemName?: string
-  category?: string
   description?: string
   currentPrice: number
   imageUrl?: string
@@ -74,7 +76,6 @@ export interface CreateItemRequest {
 
 export interface UpdateItemRequest {
   itemName?: string
-  category?: string
   description?: string
   imageUrl?: string
 }
@@ -146,11 +147,6 @@ export const searchApi = {
     return response.data
   },
 
-  // Filter by category
-  getByCategory: async (category: string): Promise<SearchResponse> => {
-    const response = await api.get(`/api/items/category/${encodeURIComponent(category)}`)
-    return response.data
-  },
 }
 
 export const analyticsApi = {

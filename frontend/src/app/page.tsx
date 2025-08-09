@@ -33,11 +33,11 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Mobile Header - only show on mobile */}
-      <header className="bg-white shadow-sm border-b lg:hidden">
+      <header className="bg-card shadow-sm border-b lg:hidden">
         <div className="px-4 py-4">
-          <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-xl font-bold text-card-foreground flex items-center gap-2">
             📱 Price Tracker
           </h1>
         </div>
@@ -47,7 +47,7 @@ export default function HomePage() {
       <main className="px-4 py-6 lg:px-8">
         {/* Desktop Page Header */}
         <div className="hidden lg:block mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
           <p className="text-muted-foreground mt-2">
             Welcome back! Here's an overview of your inventory price tracking.
           </p>
@@ -72,17 +72,12 @@ export default function HomePage() {
                 <div className="mt-4 p-3 bg-muted/50 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-mono font-medium">{selectedItem.serialNumber}</span>
-                    <span className="font-semibold text-green-600">
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">
                       ${Number(selectedItem.currentPrice).toFixed(2)}
                     </span>
                   </div>
                   {selectedItem.itemName && (
                     <p className="text-sm text-muted-foreground mb-2">{selectedItem.itemName}</p>
-                  )}
-                  {selectedItem.category && (
-                    <span className="inline-block px-2 py-1 text-xs bg-primary/10 text-primary rounded-full">
-                      {selectedItem.category}
-                    </span>
                   )}
                   <div className="flex gap-2 mt-3">
                     <Link href={`/items/${encodeURIComponent(selectedItem.serialNumber)}/price`} className="flex-1">
@@ -162,7 +157,9 @@ export default function HomePage() {
                             <div className="flex items-center gap-2 mt-1">
                               <span className="font-semibold">${Number(change.newPrice).toFixed(2)}</span>
                               <div className={`flex items-center gap-1 text-sm ${
-                                priceChangeInfo.direction === 'up' ? 'text-green-600' : 'text-red-600'
+                                priceChangeInfo.direction === 'up' 
+                                  ? 'text-emerald-600 dark:text-emerald-400' 
+                                  : 'text-red-600 dark:text-red-400'
                               }`}>
                                 {priceChangeInfo.direction === 'up' ? (
                                   <TrendingUp className="w-4 h-4" />
@@ -242,17 +239,12 @@ export default function HomePage() {
                     <div className="mt-4 p-4 bg-muted/50 rounded-lg">
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-mono font-medium">{selectedItem.serialNumber}</span>
-                        <span className="text-lg font-semibold text-green-600">
+                        <span className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
                           ${Number(selectedItem.currentPrice).toFixed(2)}
                         </span>
                       </div>
                       {selectedItem.itemName && (
                         <p className="text-sm text-muted-foreground mb-2">{selectedItem.itemName}</p>
-                      )}
-                      {selectedItem.category && (
-                        <span className="inline-block px-2 py-1 text-xs bg-primary/10 text-primary rounded-full mb-3">
-                          {selectedItem.category}
-                        </span>
                       )}
                       <div className="flex gap-2">
                         <Link href={`/items/${encodeURIComponent(selectedItem.serialNumber)}/price`}>
@@ -305,7 +297,11 @@ export default function HomePage() {
                                   <span className="text-lg font-semibold">
                                     ${Number(change.newPrice).toFixed(2)}
                                   </span>
-                                  <div className={`flex items-center gap-1 ${priceChangeInfo.direction === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                                  <div className={`flex items-center gap-1 ${
+                                    priceChangeInfo.direction === 'up' 
+                                      ? 'text-emerald-600 dark:text-emerald-400' 
+                                      : 'text-red-600 dark:text-red-400'
+                                  }`}>
                                     {priceChangeInfo.direction === 'up' ? (
                                       <TrendingUp className="w-4 h-4" />
                                     ) : (
@@ -360,11 +356,11 @@ export default function HomePage() {
                     </div>
                     <div className="text-center p-4 bg-muted/50 rounded-lg">
                       <div className="space-y-1">
-                        <div className="flex items-center justify-center gap-1 text-green-600">
+                        <div className="flex items-center justify-center gap-1 text-emerald-600 dark:text-emerald-400">
                           <TrendingUp className="h-4 w-4" />
                           <span className="font-semibold">{mockStats.itemsIncreased}</span>
                         </div>
-                        <div className="flex items-center justify-center gap-1 text-red-600">
+                        <div className="flex items-center justify-center gap-1 text-red-600 dark:text-red-400">
                           <TrendingDown className="h-4 w-4" />
                           <span className="font-semibold">{mockStats.itemsDecreased}</span>
                         </div>

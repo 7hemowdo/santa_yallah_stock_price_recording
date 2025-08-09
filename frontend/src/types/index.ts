@@ -3,7 +3,6 @@ export interface Item {
   id: string
   serialNumber: string
   itemName?: string
-  category?: string
   description?: string
   currentPrice: number
   imageUrl?: string
@@ -25,7 +24,6 @@ export interface PriceHistory {
 export interface CreateItemRequest {
   serialNumber: string
   itemName?: string
-  category?: string
   description?: string
   currentPrice: number
   imageUrl?: string
@@ -33,7 +31,6 @@ export interface CreateItemRequest {
 
 export interface UpdateItemRequest {
   itemName?: string
-  category?: string
   description?: string
   imageUrl?: string
 }
@@ -84,7 +81,6 @@ export interface RecentChange extends PriceHistory {
 export interface ItemFormData {
   serialNumber: string
   itemName?: string
-  category?: string
   description?: string
   currentPrice: number
   imageUrl?: string
@@ -97,7 +93,6 @@ export interface PriceUpdateFormData {
 
 export interface SearchFormData {
   query: string
-  category?: string
 }
 
 // Error types
@@ -124,7 +119,6 @@ export interface PaginationInfo {
 
 // Filter types
 export interface ItemFilter {
-  category?: string
   priceMin?: number
   priceMax?: number
   dateFrom?: string

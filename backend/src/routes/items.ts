@@ -11,7 +11,6 @@ const createItemSchema = z.object({
     .min(1, 'Serial number is required')
     .max(50, 'Serial number must be 50 characters or less'),
   itemName: z.string().max(100).optional().nullable(),
-  category: z.string().max(50).optional().nullable(),
   description: z.string().max(500).optional().nullable(),
   currentPrice: z.number().positive('Price must be positive').max(999999.99),
   imageUrl: z.string().url().optional().nullable(),
@@ -19,7 +18,6 @@ const createItemSchema = z.object({
 
 const updateItemSchema = z.object({
   itemName: z.string().max(100).optional().nullable(),
-  category: z.string().max(50).optional().nullable(),
   description: z.string().max(500).optional().nullable(),
   imageUrl: z.string().url().optional().nullable(),
 });
@@ -318,63 +316,6 @@ router.delete('/serial/:serialNumber', async (req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       error: 'Failed to delete item',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
-  }
-});
-
-/**
- * GET /api/items/category/:category
- * Get items by category
- */
-router.get('/category/:category', async (req: Request, res: Response) => {
-  try {
-    const { category } = req.params;
-    
-    if (!category) {
-      return res.status(400).json({
-        success: false,
-        error: 'Bad request',
-        message: 'Category is required',
-      });
-    }
-    
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = Math.min(parseInt(req.query.limit as string) || 50, 100);
-
-    const result = await itemService.getByCategory(category, page, limit);
-    
-    return res.json({
-      success: true,
-      data: result,
-    });
-  } catch (error) {
-    console.error('Error fetching items by category:', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Failed to fetch items by category',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    });
-  }
-});
-
-/**
- * GET /api/items/categories
- * Get all categories
- */
-router.get('/categories', async (req: Request, res: Response) => {
-  try {
-    const categories = await itemService.getCategories();
-    
-    return res.json({
-      success: true,
-      data: categories,
-    });
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Failed to fetch categories',
       message: error instanceof Error ? error.message : 'Unknown error',
     });
   }

@@ -16,7 +16,7 @@ import { createItemSchema, type CreateItemInput } from '@/lib/validations/item'
 import { cn } from '@/lib/utils'
 
 const MOBILE_STEPS = [
-  { id: 1, title: 'Basic Info', description: 'Serial number and category' },
+  { id: 1, title: 'Basic Info', description: 'Serial number and details' },
   { id: 2, title: 'Pricing', description: 'Current price and item name' },
   { id: 3, title: 'Review', description: 'Confirm all details' }
 ] as const
@@ -41,7 +41,6 @@ export function AddItemForm({ onSuccess, onCancel, className }: AddItemFormProps
       serialNumber: '',
       currentPrice: 0,
       itemName: '',
-      category: '',
       description: '',
       imageUrl: '' // Keep for backend compatibility
     }
@@ -79,7 +78,6 @@ export function AddItemForm({ onSuccess, onCancel, className }: AddItemFormProps
     
     if (currentStep === 1) {
       fieldsToValidate = ['serialNumber']
-      if (form.getValues().category) fieldsToValidate.push('category')
     } else if (currentStep === 2) {
       fieldsToValidate = ['currentPrice']
       if (form.getValues().itemName) fieldsToValidate.push('itemName')
@@ -124,42 +122,23 @@ export function AddItemForm({ onSuccess, onCancel, className }: AddItemFormProps
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="serialNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Serial Number *</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="e.g., SN001, PROD-123"
-                          {...field}
-                          className="font-mono"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="e.g., Electronics, Tools"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="serialNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Serial Number *</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="e.g., SN001, PROD-123"
+                        {...field}
+                        className="font-mono"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <div className="grid grid-cols-2 gap-6">
                 <FormField
@@ -317,7 +296,7 @@ export function AddItemForm({ onSuccess, onCancel, className }: AddItemFormProps
                     🔍 Basic Information
                   </CardTitle>
                   <CardDescription>
-                    Enter the serial number and category for this item
+                    Enter the serial number for this item
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -340,23 +319,6 @@ export function AddItemForm({ onSuccess, onCancel, className }: AddItemFormProps
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name="category"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Category (Optional)</FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="e.g., Electronics, Tools, Parts"
-                            {...field}
-                            className="text-lg h-12"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                 </CardContent>
               </Card>
             )}
@@ -470,12 +432,6 @@ export function AddItemForm({ onSuccess, onCancel, className }: AddItemFormProps
                       </div>
                     )}
 
-                    {watchedValues.category && (
-                      <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                        <span className="text-muted-foreground">Category:</span>
-                        <span className="font-medium">{watchedValues.category}</span>
-                      </div>
-                    )}
 
                     {watchedValues.description && (
                       <div className="p-3 bg-muted/50 rounded-lg">

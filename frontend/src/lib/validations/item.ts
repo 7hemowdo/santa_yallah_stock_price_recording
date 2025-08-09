@@ -18,12 +18,6 @@ export const createItemSchema = z.object({
     .optional()
     .or(z.literal('')),
   
-  category: z
-    .string()
-    .max(50, 'Category must be 50 characters or less')
-    .optional()
-    .or(z.literal('')),
-  
   description: z
     .string()
     .max(500, 'Description must be 500 characters or less')

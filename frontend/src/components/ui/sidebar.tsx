@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from './button'
+import { ThemeToggle } from './theme-toggle'
 
 interface SidebarNavItem {
   href: string
@@ -85,9 +86,12 @@ export function Sidebar({ className }: SidebarProps) {
     )}>
       <div className="flex flex-col h-full">
         {/* Logo/Header */}
-        <div className="flex items-center gap-2 px-6 py-4 border-b border-border">
-          <Package className="h-6 w-6 text-primary" />
-          <h1 className="text-lg font-semibold">Price Tracker</h1>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+          <div className="flex items-center gap-2">
+            <Package className="h-6 w-6 text-primary" />
+            <h1 className="text-lg font-semibold">Price Tracker</h1>
+          </div>
+          <ThemeToggle />
         </div>
 
         {/* Main Navigation */}
